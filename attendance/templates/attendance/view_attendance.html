@@ -1,0 +1,135 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}View Attendance - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-list-check"></i> View Attendance
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="page-heading mb-4">Attendance Records</h1>
+
+    {% if is_admin %}
+    <!-- Filters (Admin Only) -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-funnel"></i> Filter Attendance
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'view_attendance' %}">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        {{ form.student }}
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        {{ form.subject }}
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        {{ form.date_from }}
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        {{ form.date_to }}
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Attendance Table -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-table"></i> Attendance Records ({{ attendance_records.count }})
+        </div>
+        <div class="card-body">
+            {% if attendance_records %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            {% if is_admin %}
+                            <th>Roll Number</th>
+                            <th>Student Name</th>
+                            {% endif %}
+                            <th>Subject Code</th>
+                            <th>Subject Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr class="{% if record.status == 'P' %}table-success{% else %}table-danger{% endif %}">
+                            <td>{{ record.date }}</td>
+                            {% if is_admin %}
+                            <td><strong>{{ record.student.roll_number }}</strong></td>
+                            <td>{{ record.student.name }}</td>
+                            {% endif %}
+                            <td><strong>{{ record.subject.subject_code }}</strong></td>
+                            <td>{{ record.subject.subject_name }}</td>
+                            <td>
+                                {% if record.status == 'P' %}
+                                <span class="badge badge-present">
+                                    <i class="bi bi-check-circle"></i> Present
+                                </span>
+                                {% else %}
+                                <span class="badge badge-absent">
+                                    <i class="bi bi-x-circle"></i> Absent
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            <hr>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card stat-card info">
+                        <div class="card-body">
+                            <h5>Total Records</h5>
+                            <h3>{{ total_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card success">
+                        <div class="card-body">
+                            <h5>Present</h5>
+                            <h3>{{ present_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card stat-card danger">
+                        <div class="card-body">
+                            <h5>Absent</h5>
+                            <h3>{{ absent_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No attendance records found.</p>
+                {% if is_admin %}
+                <a href="{% url 'mark_attendance' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Mark Attendance
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

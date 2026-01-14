@@ -1,0 +1,152 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Attendance Percentage - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-graph-up"></i> Attendance Percentage
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="page-heading mb-4">Student Attendance Percentage</h1>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-funnel"></i> Filter Students
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'attendance_percentage' %}">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <select name="department" class="form-select">
+                            <option value="">All Departments</option>
+                            {% for code, name in departments %}
+                            <option value="{{ code }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <select name="year" class="form-select">
+                            <option value="">All Years</option>
+                            {% for year_num, year_name in years %}
+                            <option value="{{ year_num }}">{{ year_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Percentage Table -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-table"></i> Student Attendance Percentage
+        </div>
+        <div class="card-body">
+            {% if student_data %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Student Name</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Percentage</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in student_data %}
+                        <tr>
+                            <td><strong>{{ data.student.roll_number }}</strong></td>
+                            <td>{{ data.student.name }}</td>
+                            <td><span class="badge bg-info">{{ data.student.get_department_display }}</span></td>
+                            <td>{{ data.student.get_year_display }}</td>
+                            <td>{{ data.total_classes }}</td>
+                            <td><span class="badge badge-present">{{ data.present_classes }}</span></td>
+                            <td><span class="badge badge-absent">{{ data.absent_classes }}</span></td>
+                            <td>
+                                <strong class="{% if data.percentage >= 75 %}text-success{% elif data.percentage >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                                    {{ data.percentage }}%
+                                </strong>
+                                <div class="progress mt-1" style="height: 8px;">
+                                    <div class="progress-bar {% if data.percentage >= 75 %}bg-success{% elif data.percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %}"
+                                         style="width: {{ data.percentage }}%"></div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if data.percentage >= 75 %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Good</span>
+                                {% elif data.percentage >= 60 %}
+                                <span class="badge bg-warning"><i class="bi bi-exclamation-triangle"></i> Warning</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Low</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
+
+            <!-- Summary Statistics -->
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="card stat-card info">
+                        <div class="card-body">
+                            <h6>Total Students</h6>
+                            <h4>{{ student_data|length }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card success">
+                        <div class="card-body">
+                            <h6>Good (≥75%)</h6>
+                            <h4>{% for data in student_data %}{% if data.percentage >= 75 %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card warning">
+                        <div class="card-body">
+                            <h6>Warning (60-74%)</h6>
+                            <h4>{% for data in student_data %}{% if data.percentage >= 60 and data.percentage < 75 %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card danger">
+                        <div class="card-body">
+                            <h6>Low (<60%)</h6>
+                            <h4>{% for data in student_data %}{% if data.percentage < 60 %}{% if forloop.first %}1{% else %}{{ forloop.counter }}{% endif %}{% endif %}{% empty %}0{% endfor %}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No attendance data available.</p>
+                <a href="{% url 'mark_attendance' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Mark Attendance
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

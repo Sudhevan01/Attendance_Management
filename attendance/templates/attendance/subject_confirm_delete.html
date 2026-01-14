@@ -1,0 +1,55 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Delete Subject - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-exclamation-triangle"></i> Delete Subject
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <i class="bi bi-exclamation-triangle"></i> Confirm Deletion
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Warning!</strong> This action cannot be undone.
+                    </div>
+
+                    <p>Are you sure you want to delete the following subject?</p>
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5>{{ subject.subject_name }}</h5>
+                            <p class="mb-1"><strong>Subject Code:</strong> {{ subject.subject_code }}</p>
+                            <p class="mb-1"><strong>Department:</strong> {{ subject.get_department_display }}</p>
+                            <p class="mb-0"><strong>Year:</strong> {{ subject.get_year_display }}</p>
+                        </div>
+                    </div>
+
+                    <p class="text-danger">
+                        <i class="bi bi-exclamation-circle"></i>
+                        All attendance records associated with this subject will also be deleted.
+                    </p>
+
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'subject_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Yes, Delete Subject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

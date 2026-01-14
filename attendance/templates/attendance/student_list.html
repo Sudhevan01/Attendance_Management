@@ -1,0 +1,110 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Students - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-people"></i> Student Management
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="page-heading">Students List</h1>
+        <a href="{% url 'student_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Student
+        </a>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="{% url 'student_list' %}">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <input type="text" name="search" class="form-control" placeholder="Search by name or roll number" value="{{ search_query }}">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <select name="department" class="form-select">
+                            <option value="">All Departments</option>
+                            {% for code, name in departments %}
+                            <option value="{{ code }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <select name="year" class="form-select">
+                            <option value="">All Years</option>
+                            {% for year_num, year_name in years %}
+                            <option value="{{ year_num }}">{{ year_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-table"></i> All Students ({{ students.count }})
+        </div>
+        <div class="card-body">
+            {% if students %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Roll Number</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><strong>{{ student.roll_number }}</strong></td>
+                            <td>{{ student.name }}</td>
+                            <td><span class="badge bg-info">{{ student.get_department_display }}</span></td>
+                            <td>{{ student.get_year_display }}</td>
+                            <td>
+                                {% if student.user %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Enabled</span>
+                                {% else %}
+                                <span class="badge bg-secondary"><i class="bi bi-x-circle"></i> Disabled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'student_update' student.pk %}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a href="{% url 'student_delete' student.pk %}" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No students found.</p>
+                <a href="{% url 'student_create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add First Student
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
