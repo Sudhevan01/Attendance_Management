@@ -1,0 +1,267 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Dashboard - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-speedometer2"></i> Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    {% if is_admin %}
+    <!-- Admin Dashboard -->
+    <h1 class="page-heading mb-4">Admin Dashboard</h1>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">Total Students</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ total_students }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card info">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-uppercase text-info fw-bold text-xs mb-1">Total Subjects</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ total_subjects }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-book text-info" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card success">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-uppercase text-success fw-bold text-xs mb-1">Present Today</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ present_today }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card danger">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-uppercase text-danger fw-bold text-xs mb-1">Absent Today</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ absent_today }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-x-circle text-danger" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Attendance -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-clock-history"></i> Recent Attendance Records
+        </div>
+        <div class="card-body">
+            {% if recent_attendance %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Roll Number</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_attendance %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.student.name }}</td>
+                            <td>{{ record.student.roll_number }}</td>
+                            <td>{{ record.subject.subject_code }}</td>
+                            <td>
+                                {% if record.status == 'P' %}
+                                <span class="badge badge-present">Present</span>
+                                {% else %}
+                                <span class="badge badge-absent">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4">No attendance records found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Student Dashboard -->
+    <h1 class="page-heading mb-4">My Attendance Dashboard</h1>
+
+    <!-- Student Info -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class="bi bi-person-badge"></i> {{ student.name }}</h5>
+                    <p class="mb-1"><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+                    <p class="mb-1"><strong>Department:</strong> {{ student.get_department_display }}</p>
+                    <p class="mb-0"><strong>Year:</strong> {{ student.get_year_display }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Statistics -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card primary">
+                <div class="card-body">
+                    <div class="text-uppercase text-primary fw-bold text-xs mb-1">Overall Attendance</div>
+                    <div class="h3 mb-0 fw-bold">{{ attendance_percentage }}%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card info">
+                <div class="card-body">
+                    <div class="text-uppercase text-info fw-bold text-xs mb-1">Total Classes</div>
+                    <div class="h3 mb-0 fw-bold">{{ total_classes }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card success">
+                <div class="card-body">
+                    <div class="text-uppercase text-success fw-bold text-xs mb-1">Present</div>
+                    <div class="h3 mb-0 fw-bold">{{ present_classes }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card danger">
+                <div class="card-body">
+                    <div class="text-uppercase text-danger fw-bold text-xs mb-1">Absent</div>
+                    <div class="h3 mb-0 fw-bold">{{ absent_classes }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject-wise Attendance -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-bar-chart"></i> Subject-wise Attendance
+        </div>
+        <div class="card-body">
+            {% if subject_attendance %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in subject_attendance %}
+                        <tr>
+                            <td>{{ data.subject.subject_code }} - {{ data.subject.subject_name }}</td>
+                            <td>{{ data.total }}</td>
+                            <td><span class="badge badge-present">{{ data.present }}</span></td>
+                            <td><span class="badge badge-absent">{{ data.absent }}</span></td>
+                            <td>
+                                <strong class="{% if data.percentage >= 75 %}text-success{% else %}text-danger{% endif %}">
+                                    {{ data.percentage }}%
+                                </strong>
+                                <div class="progress mt-1" style="height: 5px;">
+                                    <div class="progress-bar {% if data.percentage >= 75 %}bg-success{% else %}bg-danger{% endif %}"
+                                         style="width: {{ data.percentage }}%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4">No attendance records found.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Attendance -->
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-clock-history"></i> Recent Attendance
+        </div>
+        <div class="card-body">
+            {% if recent_attendance %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in recent_attendance %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.subject.subject_code }} - {{ record.subject.subject_name }}</td>
+                            <td>
+                                {% if record.status == 'P' %}
+                                <span class="badge badge-present">Present</span>
+                                {% else %}
+                                <span class="badge badge-absent">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-4">No attendance records found.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

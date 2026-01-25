@@ -1,0 +1,308 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Welcome - Attendance Management System{% endblock %}
+
+{% block login_content %}
+<div class="welcome-page">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6 text-white">
+                    <div class="hero-content">
+                        <div class="mb-4">
+                            <i class="bi bi-calendar-check-fill display-1"></i>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-3">Attendance Management System</h1>
+                        <p class="lead mb-4">
+                            A comprehensive solution for tracking and managing student attendance.
+                            Streamline your academic administration with real-time tracking,
+                            detailed reports, and easy-to-use interface.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                            </a>
+                            <a href="#features" class="btn btn-outline-light btn-lg px-4">
+                                <i class="bi bi-arrow-down-circle me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="hero-illustration text-center">
+                        <div class="floating-card card-1">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Students</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Present</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="bi bi-graph-up"></i>
+                            <span>Reports</span>
+                        </div>
+                        <div class="main-icon">
+                            <i class="bi bi-clipboard-data"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-primary">Key Features</h2>
+                <p class="text-muted">Everything you need for efficient attendance management</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <h5>Student Management</h5>
+                        <p class="text-muted small">Easily add, update, and manage student records across departments and years.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <h5>Mark Attendance</h5>
+                        <p class="text-muted small">Quick and intuitive interface for marking daily attendance by subject.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-bar-chart-line"></i>
+                        </div>
+                        <h5>Analytics & Reports</h5>
+                        <p class="text-muted small">View attendance percentages and generate comprehensive reports.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h5>Role-Based Access</h5>
+                        <p class="text-muted small">Secure access with separate dashboards for admins and students.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section py-5 bg-light">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <i class="bi bi-people text-primary display-5"></i>
+                        <h3 class="fw-bold mt-2 mb-0 text-primary">Easy</h3>
+                        <p class="text-muted mb-0">Student Tracking</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <i class="bi bi-book text-success display-5"></i>
+                        <h3 class="fw-bold mt-2 mb-0 text-success">Multiple</h3>
+                        <p class="text-muted mb-0">Subjects Support</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <i class="bi bi-clock-history text-info display-5"></i>
+                        <h3 class="fw-bold mt-2 mb-0 text-info">Real-time</h3>
+                        <p class="text-muted mb-0">Updates</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-item">
+                        <i class="bi bi-phone text-warning display-5"></i>
+                        <h3 class="fw-bold mt-2 mb-0 text-warning">Responsive</h3>
+                        <p class="text-muted mb-0">Design</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+                    <p class="text-muted mb-4">Login to access your dashboard and start managing attendance efficiently.</p>
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-4 bg-dark text-white">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 Attendance Management System. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<style>
+    /* Hero Section Styles */
+    .welcome-page {
+        background: #f8f9fc;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Floating Cards Animation */
+    .hero-illustration {
+        position: relative;
+        height: 400px;
+    }
+
+    .floating-card {
+        position: absolute;
+        background: white;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .floating-card i {
+        font-size: 1.5rem;
+        color: #4e73df;
+    }
+
+    .floating-card span {
+        font-weight: 600;
+        color: #5a5c69;
+    }
+
+    .card-1 {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .card-2 {
+        top: 50%;
+        right: 10%;
+        animation-delay: 0.5s;
+    }
+
+    .card-3 {
+        bottom: 15%;
+        left: 20%;
+        animation-delay: 1s;
+    }
+
+    .main-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 150px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .main-icon i {
+        font-size: 4rem;
+        color: #4e73df;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .feature-icon i {
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    /* Stats Section */
+    .stat-item {
+        padding: 20px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: white;
+    }
+
+    /* Smooth scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+{% endblock %}

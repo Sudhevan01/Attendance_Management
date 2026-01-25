@@ -1,0 +1,73 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}{{ title }} - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-book-half"></i> {{ title }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-book"></i> {{ title }}
+                </div>
+                <div class="card-body">
+                    <form method="post" action="">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.subject_code.id_for_label }}" class="form-label">Subject Code *</label>
+                                {{ form.subject_code }}
+                                {% if form.subject_code.errors %}
+                                <div class="text-danger small">{{ form.subject_code.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.subject_name.id_for_label }}" class="form-label">Subject Name *</label>
+                                {{ form.subject_name }}
+                                {% if form.subject_name.errors %}
+                                <div class="text-danger small">{{ form.subject_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.department.id_for_label }}" class="form-label">Department *</label>
+                                {{ form.department }}
+                                {% if form.department.errors %}
+                                <div class="text-danger small">{{ form.department.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.year.id_for_label }}" class="form-label">Year *</label>
+                                {{ form.year }}
+                                {% if form.year.errors %}
+                                <div class="text-danger small">{{ form.year.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'subject_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> {{ button_text }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

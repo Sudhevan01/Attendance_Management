@@ -1,0 +1,148 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Mark Attendance - Attendance Management System{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-check-circle"></i> Mark Attendance
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>
+                    <i class="bi bi-calendar-check"></i>
+                    Mark Attendance - {{ subject.subject_name }} ({{ date }})
+                </span>
+                <span class="badge bg-info">{{ subject.get_department_display }} - {{ subject.get_year_display }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'mark_attendance' %}">
+                {% csrf_token %}
+                <input type="hidden" name="subject" value="{{ subject.id }}">
+                <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+                <input type="hidden" name="submit_attendance" value="true">
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Instructions:</strong> Check the box for students who are <strong>PRESENT</strong>. Unchecked boxes will be marked as ABSENT.
+                </div>
+
+                {% if students %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Status</th>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td class="text-center">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="student_{{ student.id }}"
+                                               id="student_{{ student.id }}"
+                                               {% if student.attendance_status == 'P' %}checked{% elif student.attendance_status == None %}checked{% endif %}>
+                                        <label class="form-check-label" for="student_{{ student.id }}">
+                                            <span class="present-label text-success fw-bold">Present</span>
+                                            <span class="absent-label text-danger fw-bold" style="display: none;">Absent</span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td><strong>{{ student.roll_number }}</strong></td>
+                                <td>{{ student.name }}</td>
+                                <td><span class="badge bg-secondary">{{ student.get_department_display }}</span></td>
+                                <td>{{ student.get_year_display }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'mark_attendance' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                    <div>
+                        <button type="button" class="btn btn-success me-2" id="markAllPresent">
+                            <i class="bi bi-check-all"></i> Mark All Present
+                        </button>
+                        <button type="button" class="btn btn-danger me-2" id="markAllAbsent">
+                            <i class="bi bi-x-circle"></i> Mark All Absent
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Submit Attendance
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">No students found for this subject.</p>
+                    <a href="{% url 'student_create' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Students
+                    </a>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mark all present
+    document.getElementById('markAllPresent').addEventListener('click', function() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = true;
+            updateLabel(checkbox);
+        });
+    });
+
+    // Mark all absent
+    document.getElementById('markAllAbsent').addEventListener('click', function() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+            updateLabel(checkbox);
+        });
+    });
+
+    // Update labels when checkbox changes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateLabel(this);
+        });
+        // Initialize labels
+        updateLabel(checkbox);
+    });
+
+    function updateLabel(checkbox) {
+        const row = checkbox.closest('tr');
+        const presentLabel = row.querySelector('.present-label');
+        const absentLabel = row.querySelector('.absent-label');
+
+        if (checkbox.checked) {
+            presentLabel.style.display = 'inline';
+            absentLabel.style.display = 'none';
+            row.classList.remove('table-danger');
+            row.classList.add('table-success');
+        } else {
+            presentLabel.style.display = 'none';
+            absentLabel.style.display = 'inline';
+            row.classList.remove('table-success');
+            row.classList.add('table-danger');
+        }
+    }
+</script>
+{% endblock %}
